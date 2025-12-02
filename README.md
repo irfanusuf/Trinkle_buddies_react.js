@@ -1,1 +1,5 @@
-Trinkle buddies is a  social media app 
+npx create-react-app my-app
+
+
+
+npm vite@latest   
