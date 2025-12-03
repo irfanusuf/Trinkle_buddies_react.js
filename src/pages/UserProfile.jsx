@@ -9,6 +9,8 @@ const UserProfile = () => {
 
     const [username, setUsername] = useState("")
     const [posts, setPosts] = useState([])
+
+
     const [renderCreatePost , setRenderCreatePost] = useState(false)
 
     const navigate = useNavigate()
@@ -65,7 +67,7 @@ const UserProfile = () => {
 
             <button onClick={()=>{setRenderCreatePost(!renderCreatePost)}} > create Post </button>
 
-            {renderCreatePost ? <CreatePost/> : ""}
+            {renderCreatePost ? <CreatePost/> : ""}     
 
 
         </div>

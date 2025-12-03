@@ -9,23 +9,40 @@ const CreatePost = () => {
     const [imageFile, setImageFile] = useState(null)
 
     const [postCaption, setPostCaption] = useState("")
-    
+
     const [previewImage, setPreviewImage] = useState(null);
 
 
-    const formData = { postCaption }
+    const formData = { postCaption, imageFile }
 
     const navigate = useNavigate()
 
-    const handleImage = () => {
 
+
+
+    const handleImage = (e) => {
+        const file = e.target.files[0]
+        if (file === null) {
+            return
+        }
+        const reader = new FileReader()   // instance create 
+        reader.readAsDataURL(file) // file reading start 
+        reader.onload = () => {
+            if (reader.readyState === 2) {
+                setPreviewImage(reader.result)
+                setImageFile(reader.result)
+            }
+        }
     }
+
+
+
+
 
     async function uploadPostAPI() {
 
         try {
-            const token = localStorage.getItem("token")
-
+            const token = localStorage.getItem("token")    // mechnaism change 
             const res = await axiosInstance.post(`/post/create?token=${token}`, formData)
 
             if (res.status === 201) {
@@ -61,26 +78,35 @@ const CreatePost = () => {
     return (
         <div className="create-post">
             <h2>Create Post</h2>
+
+
             <form>
                 <div className="input-group">
                     <label>Post Caption</label>
                     <input
                         value={postCaption}
                         onChange={(e) => setPostCaption(e.target.value)}
+                        type='text'
                     />
                 </div>
 
 
                 <div className="image-upload-section">
                     <label
+
                         className="image-picker"
                         onClick={() => document.getElementById('hiddenImageInput').click()}
                     >
                         {!previewImage && <span>Select Image</span>}
+
+
                         {previewImage && (
                             <img src={previewImage} alt="preview" className="preview" />
                         )}
+
+
                     </label>
+
 
 
                     <input
@@ -88,9 +114,14 @@ const CreatePost = () => {
                         type="file"
                         accept="image/*"
                         style={{ display: 'none' }}
-                        onChange={handleImage}
+                        onChange={(e) => {
+                            handleImage(e)
+                        }}
                     />
                 </div>
+
+
+
 
 
                 <button className='upload_post_button' type="button" onClick={uploadPostAPI}>
