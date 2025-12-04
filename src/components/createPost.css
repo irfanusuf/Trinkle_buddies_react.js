@@ -1,4 +1,6 @@
 .create-post {
+  position: absolute;
+  left: 600px;
   width: 420px;
   padding: 24px;
   background: #ffffff;

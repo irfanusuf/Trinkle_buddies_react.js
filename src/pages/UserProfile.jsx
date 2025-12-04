@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../utils/axiosinstance'
-import CreatePost from './CreatePost'
+import CreatePost from '../components/CreatePost'
+import RenderPosts from '../components/RenderPosts'
 
 const UserProfile = () => {
-
+  
 
     const [username, setUsername] = useState("")
     const [posts, setPosts] = useState([])
@@ -21,7 +22,7 @@ const UserProfile = () => {
         try {
             const token = localStorage.getItem("token")
             if (token !== null) {
-                const response = await axiosInstance.get(`/user/verify/${token}`)   // API CALL
+                const response = await axiosInstance.get(`/user/verify?token=${token}`)   // API CALL
                 if (response.status === 200) {
                     setUsername(response.data.payload.username)
                 }
@@ -53,22 +54,24 @@ const UserProfile = () => {
 
     useEffect(() => {
         fetchUserApi()
-        fetchPostsApi()
+        // fetchPostsApi()
     }, [])
 
 
 
 
     return (
-        <div>
+        <div className='user_profile'>
             <h1> Welcome  {username} </h1>
             <h3> This is secure user dashboard   , this should open only after succesfull login  </h3>
 
 
             <button onClick={()=>{setRenderCreatePost(!renderCreatePost)}} > create Post </button>
 
-            {renderCreatePost ? <CreatePost/> : ""}     
-
+            
+            {renderCreatePost ? <CreatePost setRenderCreatePost = {setRenderCreatePost}/> : ""}     
+           
+            <RenderPosts/>
 
         </div>
     )

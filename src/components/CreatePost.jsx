@@ -4,21 +4,17 @@ import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import "./createPost.css"
 
-const CreatePost = () => {
+const CreatePost = (props) => {
 
     const [imageFile, setImageFile] = useState(null)
-
     const [postCaption, setPostCaption] = useState("")
-
     const [previewImage, setPreviewImage] = useState(null);
-
-
-    const formData = { postCaption, imageFile }
+    const [loading , setLoading] = useState(false)
 
     const navigate = useNavigate()
 
 
-
+  
 
     const handleImage = (e) => {
         const file = e.target.files[0]
@@ -37,23 +33,40 @@ const CreatePost = () => {
 
 
 
+    //const formData = { postCaption, imageFile } // form data when exceeded  100kb json parsing fails with 413 media too large  // cors error 
+
+
+    const formData = new FormData()
+
+    formData.append("postCaption" , postCaption)
+    formData.append("imageFile" , imageFile)
+
 
 
     async function uploadPostAPI() {
 
         try {
-            const token = localStorage.getItem("token")    // mechnaism change 
+
+            setLoading(true)
+
+            const token = localStorage.getItem("token")   
+            
             const res = await axiosInstance.post(`/post/create?token=${token}`, formData)
 
-            if (res.status === 201) {
-                toast.success(res.data.message)
+            if (res.data.success) {
+                toast.success("Post uploaded Succesfully!")
+                setLoading(false)
+                // form sanitization 
+                setImageFile(null)
+                setPreviewImage(null)
+                setPostCaption("")
 
-                setTimeout(() => {
-                    navigate("/user/profile")
-                }, 3000);
+                props.setRenderCreatePost(false)
+
             }
         } catch (error) {
 
+            setLoading(false)
             if (error.response) {
                 const codesARR = [400, 401, 403, 404, 500]
 
@@ -69,16 +82,11 @@ const CreatePost = () => {
     }
 
 
-
-
-
-
     // send image 
     // send caption
     return (
         <div className="create-post">
             <h2>Create Post</h2>
-
 
             <form>
                 <div className="input-group">
@@ -90,24 +98,17 @@ const CreatePost = () => {
                     />
                 </div>
 
-
                 <div className="image-upload-section">
-                    <label
 
+                    <label
                         className="image-picker"
                         onClick={() => document.getElementById('hiddenImageInput').click()}
                     >
                         {!previewImage && <span>Select Image</span>}
-
-
                         {previewImage && (
                             <img src={previewImage} alt="preview" className="preview" />
                         )}
-
-
                     </label>
-
-
 
                     <input
                         id="hiddenImageInput"
@@ -118,15 +119,13 @@ const CreatePost = () => {
                             handleImage(e)
                         }}
                     />
+
                 </div>
 
-
-
-
-
-                <button className='upload_post_button' type="button" onClick={uploadPostAPI}>
-                    Upload Your Post
+                <button className='upload_post_button' type="button" onClick={uploadPostAPI} disabled={loading}>
+                        {loading ?  "Uploading....."  : "Upload Your Post" } 
                 </button>
+                
             </form>
         </div>
     )
