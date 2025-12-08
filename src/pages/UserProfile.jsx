@@ -4,15 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../utils/axiosinstance'
 import CreatePost from '../components/CreatePost'
 import RenderPosts from '../components/RenderPosts'
+import Spinner from '../components/Spinner'
 
 const UserProfile = () => {
-  
+
 
     const [username, setUsername] = useState("")
     const [posts, setPosts] = useState([])
+    const [loading, setLoading] = useState(false)
 
-
-    const [renderCreatePost , setRenderCreatePost] = useState(false)
+    const [renderCreatePost, setRenderCreatePost] = useState(false)
+    const [refresh, setRefresh] = useState(false)
 
     const navigate = useNavigate()
 
@@ -36,27 +38,35 @@ const UserProfile = () => {
         }
     }
 
-    async function fetchPostsApi() {
-        try {
-            const res = await axiosInstance.get("/get/posts")
-            if (res.status === 200) {
-                setPosts(res.data.payload)
-            }
 
+    async function fetchPostsAPi() {
+        try {
+            setLoading(true)
+            const token = localStorage.getItem("token")
+            const res = await axiosInstance.get(`/fetch/posts?token=${token}`)
+            if (res.data.success) {
+                setPosts(res.data.payload)
+
+                setTimeout(() => {
+                      setLoading(false)
+                }, 4000);
+ 
+            }
         } catch (error) {
             console.log(error)
         }
+
     }
 
 
-
+    useEffect(() => {
+        fetchUserApi()      // whenveer userprofile renders
+    }, [])
 
 
     useEffect(() => {
-        fetchUserApi()
-        // fetchPostsApi()
-    }, [])
-
+        fetchPostsAPi()    // whenever the userprofile  renders  ,,, when value of refresh changes 
+    }, [refresh])
 
 
 
@@ -65,14 +75,18 @@ const UserProfile = () => {
             <h1> Welcome  {username} </h1>
             <h3> This is secure user dashboard   , this should open only after succesfull login  </h3>
 
+            <button onClick={() => { setRenderCreatePost(!renderCreatePost) }} > create Post </button>
 
-            <button onClick={()=>{setRenderCreatePost(!renderCreatePost)}} > create Post </button>
+            {renderCreatePost ?
 
-            
-            {renderCreatePost ? <CreatePost setRenderCreatePost = {setRenderCreatePost}/> : ""}     
-           
-            <RenderPosts/>
+                <CreatePost
+                    setRenderCreatePost={setRenderCreatePost}
+                    setRefresh={setRefresh}
+                /> : ""}
 
+            {/*component*/}
+
+                {loading ?  <Spinner/>    :  <RenderPosts posts={posts} username = {username} />}
         </div>
     )
 }

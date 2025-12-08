@@ -1,20 +1,16 @@
 import React, { useState } from 'react'
 import { axiosInstance } from '../utils/axiosinstance'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 import "./createPost.css"
 
 const CreatePost = (props) => {
 
-    const [imageFile, setImageFile] = useState(null)
+
     const [postCaption, setPostCaption] = useState("")
     const [previewImage, setPreviewImage] = useState(null);
-    const [loading , setLoading] = useState(false)
+    const [imageFile, setImageFile] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const navigate = useNavigate()
-
-
-  
 
     const handleImage = (e) => {
         const file = e.target.files[0]
@@ -32,14 +28,12 @@ const CreatePost = (props) => {
     }
 
 
-
     //const formData = { postCaption, imageFile } // form data when exceeded  100kb json parsing fails with 413 media too large  // cors error 
 
 
     const formData = new FormData()
-
-    formData.append("postCaption" , postCaption)
-    formData.append("imageFile" , imageFile)
+    formData.append("postCaption", postCaption)
+    formData.append("imageFile", imageFile)
 
 
 
@@ -49,8 +43,8 @@ const CreatePost = (props) => {
 
             setLoading(true)
 
-            const token = localStorage.getItem("token")   
-            
+            const token = localStorage.getItem("token")
+
             const res = await axiosInstance.post(`/post/create?token=${token}`, formData)
 
             if (res.data.success) {
@@ -62,6 +56,7 @@ const CreatePost = (props) => {
                 setPostCaption("")
 
                 props.setRenderCreatePost(false)
+                props.setRefresh(true)
 
             }
         } catch (error) {
@@ -123,9 +118,9 @@ const CreatePost = (props) => {
                 </div>
 
                 <button className='upload_post_button' type="button" onClick={uploadPostAPI} disabled={loading}>
-                        {loading ?  "Uploading....."  : "Upload Your Post" } 
+                    {loading ? "Uploading....." : "Upload Your Post"}
                 </button>
-                
+
             </form>
         </div>
     )
