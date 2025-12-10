@@ -40,13 +40,9 @@ const CreatePost = (props) => {
     async function uploadPostAPI() {
 
         try {
-
             setLoading(true)
-
             const token = localStorage.getItem("token")
-
             const res = await axiosInstance.post(`/post/create?token=${token}`, formData)
-
             if (res.data.success) {
                 toast.success("Post uploaded Succesfully!")
                 setLoading(false)
@@ -54,7 +50,6 @@ const CreatePost = (props) => {
                 setImageFile(null)
                 setPreviewImage(null)
                 setPostCaption("")
-
                 props.setRenderCreatePost(false)
                 props.setRefresh(true)
 

@@ -40,18 +40,20 @@ const RenderPosts = (props) => {
         <div className='render_posts'>
 
             <h2> Recent Posts</h2>
-            <div className='posts' style={{ display: "flex", flexWrap: "wrap" }}>
+
+
+            <div className='posts' >
 
                 {props.posts.map((post) => (
                     <div className="post">
 
-                        <div className="header">
+                        {/* <div className="header">
                             <div className="avatar">{props.username.slice(0, 2).toUpperCase()}</div>
                             <div className="header-info">
                                 <h4>{props.username.toUpperCase()}</h4>
                                 <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                             </div>
-                        </div>
+                        </div> */}
 
 
 

@@ -1,28 +1,26 @@
-
-
-
 body {
 
-padding: 0;
-margin: 0;
-font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 
 
 }
 
 
-.navbar{
+.navbar {
 
     background-color: black;
     color: aliceblue;
     display: flex;
 
-    >ul{
+    >ul {
         display: flex;
         gap: 20px;
         list-style-type: none;
-        >li{
-            >a{
+
+        >li {
+            >a {
                 color: aliceblue;
                 text-decoration: none;
             }
@@ -34,7 +32,7 @@ font-family: Arial, Helvetica, sans-serif;
 
 
 
-.footer{
+.footer {
 
     background-color: black;
     color: aliceblue;
@@ -47,12 +45,12 @@ font-family: Arial, Helvetica, sans-serif;
 
 
 
-.main{
+.main {
     min-height: 90vh;
 }
 
 
-.register{
+.register {
 
 
     display: flex;
@@ -64,38 +62,29 @@ font-family: Arial, Helvetica, sans-serif;
 
 
 
-.register_form , .login_form{
+.register_form,
+.login_form {
 
-display: flex;
-flex-direction: column;
-gap: 20px;
-
-
->input{
-    width: 400px;
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid blue;
-}
-
->button{
-      padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid blue;
-    font-size: 20px;
-}
-
-}
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 
 
+    >input {
+        width: 400px;
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid blue;
+    }
 
-.user_profile{
-
-    width: 70%;
-    margin: auto;
-
-
-
+    >button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid blue;
+        font-size: 20px;
+    }
 
 }
+
+

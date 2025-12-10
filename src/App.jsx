@@ -14,7 +14,7 @@ import { axiosInstance } from './utils/axiosinstance'
 
 const App = () => {
 
-  const [username, setUsername] = useState("")
+  const [user, setUser] = useState({})
   const navigate = useNavigate()
 
   async function fetchUserApi() {
@@ -24,7 +24,7 @@ const App = () => {
       if (token !== null) {
         const response = await axiosInstance.get(`/user/verify?token=${token}`)   // API CALL
         if (response.status === 200) {
-          setUsername(response.data.payload.username)
+          setUser(response.data.payload)
         }
 
       } else {
@@ -37,13 +37,9 @@ const App = () => {
   }
 
 
-  
-
   useEffect(() => {
     fetchUserApi()      // whenveer App renders
   }, [])
-
-
 
 
   return (
@@ -59,7 +55,7 @@ const App = () => {
           <Route path='/contact' element={<Contact />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/user/profile' element={<UserProfile username={username} />} />
+          <Route path='/user/profile' element={<UserProfile user={user} />} />
         </Routes>
       </div>
       <Footer />

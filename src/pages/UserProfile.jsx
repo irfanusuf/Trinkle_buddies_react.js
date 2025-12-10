@@ -4,9 +4,10 @@ import { axiosInstance } from '../utils/axiosinstance'
 import CreatePost from '../components/CreatePost'
 import RenderPosts from '../components/RenderPosts'
 import Spinner from '../components/Spinner'
+import "./userProfile.css"
 
-const UserProfile = (props) => {
 
+const UserProfile = ({ user }) => {
 
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(false)
@@ -22,13 +23,10 @@ const UserProfile = (props) => {
             if (res.data.success) {
                 setPosts(res.data.payload)
                 setLoading(false)
-        
- 
             }
         } catch (error) {
             console.log(error)
         }
-
     }
 
     useEffect(() => {
@@ -38,26 +36,54 @@ const UserProfile = (props) => {
 
 
     return (
-        <div className='user_profile'>
-            <h1> Welcome  {props.username} </h1>
-            <h3> This is secure user dashboard   , this should open only after succesfull login  </h3>
 
-            <button onClick={() => { setRenderCreatePost(!renderCreatePost) }} > create Post </button>
 
-            {renderCreatePost ?
+        <>
 
-                <CreatePost
-                    setRenderCreatePost={setRenderCreatePost}
-                    setRefresh={setRefresh}
-                /> : ""}
+            <div className='user_profile'>
 
-            {/*component*/}
+                <div className='user_profile_header'>
+                    <div>
+                        <h3>   {user.username} </h3>
+                        <img src={""} width={100} alt={user.username} />
+                    </div>
 
-                {loading ?  <Spinner/>    :  <RenderPosts 
-                posts={posts} 
-                username = {props.username} 
-                setRefresh={setRefresh} />}
-        </div>
+                
+                <div>
+                    <h3> Posts     {user && user.posts.length}  </h3>
+                    <h3> Following {user && user.following.length} </h3>
+                    <h3> Followers {user && user.followers.length} </h3>
+                </div> 
+
+                </div>
+
+                <button onClick={() => { setRenderCreatePost(!renderCreatePost) }} > create Post </button>
+
+            </div>
+
+
+
+            
+
+                {renderCreatePost ?
+
+                    <CreatePost
+                        setRenderCreatePost={setRenderCreatePost}
+                        setRefresh={setRefresh}
+                    /> : ""}
+
+                {/*component*/}
+
+                {loading ? <Spinner /> : <RenderPosts
+                    posts={posts}
+                    username={user.username}
+                    setRefresh={setRefresh} />}
+
+    
+
+
+        </>
+
     )
 }
 
