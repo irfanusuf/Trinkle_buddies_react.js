@@ -1,7 +1,7 @@
 
 import { toast } from "react-toastify";
 import { axiosInstance } from "../utils/axiosinstance";
-import "./renderPost.css"
+import "../styles/renderPost.css"
 import { FaHeart, FaRegComment, FaShareSquare } from "react-icons/fa";
 
 const RenderPosts = (props) => {

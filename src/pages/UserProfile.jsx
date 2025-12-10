@@ -4,7 +4,7 @@ import { axiosInstance } from '../utils/axiosinstance'
 import CreatePost from '../components/CreatePost'
 import RenderPosts from '../components/RenderPosts'
 import Spinner from '../components/Spinner'
-import "./userProfile.css"
+import "../styles/userProfile.css"
 
 
 const UserProfile = ({ user }) => {

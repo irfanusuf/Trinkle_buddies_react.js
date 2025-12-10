@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { axiosInstance } from '../utils/axiosinstance'
 import { toast } from 'react-toastify'
-import "./createPost.css"
+import "../styles/createPost.css"
 
 const CreatePost = (props) => {
 
