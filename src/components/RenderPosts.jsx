@@ -3,8 +3,26 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../utils/axiosinstance";
 import "../styles/renderPost.css"
 import { FaHeart, FaRegComment, FaShareSquare } from "react-icons/fa";
+import { useState } from "react";
+import CommentCard from "../molecules/CommentCard";
 
 const RenderPosts = (props) => {
+
+
+
+    const [showComments, setShowComments] = useState(false)
+    const [postId, setPostId] = useState(null)
+    const [comments, setComments] = useState([])
+
+
+    const handleCommentCard = (postId, postCommentsARR) => {
+        //  console.log("postid" , postId)
+        //  console.log("commentARR" , postCommentsARR)
+        setShowComments(true)
+        setComments(postCommentsARR)
+        setPostId(postId)
+    }
+
 
 
     async function likeApi(postId) {
@@ -80,13 +98,16 @@ const RenderPosts = (props) => {
 
 
 
-                            <button onClick={commentApi} className="action-btn"><FaRegComment /></button>
+                            <button onClick={() => { handleCommentCard(post._id, post.comments) }} className="action-btn"><FaRegComment /></button>
+
+
                             <button onClick={shareApi} className="action-btn"><FaShareSquare /></button>
+
                         </div>
 
 
 
-                        <div className="likes-count">{post.likes.length} likes</div>
+                        <div className="likes-count">{post.likes && post.likes.length} likes</div>
 
 
 
@@ -100,12 +121,26 @@ const RenderPosts = (props) => {
 
 
                         <div className="comments-summary">
-                            View all {post.comments.length} comments
+                            View all {post.comments && post.comments.length} comments
                         </div>
+
+
+
                     </div>
                 ))}
 
             </div>
+
+
+
+            {showComments &&
+                <div className="comments">
+                    <CommentCard comments={comments} postId={postId} setRefresh={props.setRefresh} />
+                </div>
+            }
+
+
+
         </div>
     )
 }

@@ -7,7 +7,7 @@ import Spinner from '../components/Spinner'
 import "../styles/userProfile.css"
 
 
-const UserProfile = ({ user }) => {
+const UserProfile = ({user}) => {
 
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(false)
@@ -50,9 +50,9 @@ const UserProfile = ({ user }) => {
 
                 
                 <div>
-                    <h3> Posts     {user && user.posts.length}  </h3>
-                    <h3> Following {user && user.following.length} </h3>
-                    <h3> Followers {user && user.followers.length} </h3>
+                    <h3> Posts     {user.posts  &&  user.posts.length   }  </h3>
+                    <h3> Following {user.following && user.following.length } </h3>
+                    <h3> Followers {user.followers &&  user.followers.length} </h3>
                 </div> 
 
                 </div>
@@ -61,9 +61,6 @@ const UserProfile = ({ user }) => {
 
             </div>
 
-
-
-            
 
                 {renderCreatePost ?
 

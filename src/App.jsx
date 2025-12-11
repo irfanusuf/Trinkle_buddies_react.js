@@ -15,6 +15,8 @@ import { axiosInstance } from './utils/axiosinstance'
 const App = () => {
 
   const [user, setUser] = useState({})
+
+
   const navigate = useNavigate()
 
   async function fetchUserApi() {
@@ -24,6 +26,7 @@ const App = () => {
       if (token !== null) {
         const response = await axiosInstance.get(`/user/verify?token=${token}`)   // API CALL
         if (response.status === 200) {
+
           setUser(response.data.payload)
         }
 
