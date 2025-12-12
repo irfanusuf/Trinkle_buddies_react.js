@@ -34,7 +34,7 @@ const RenderPosts = (props) => {
             const res = await axiosInstance.post(`/post/like/${postId}?token=${token}`)
             if (res.data.success) {
                 toast.success("liked succesfully")
-                props.setRefresh(true)
+                props.setRefresh(refresh =>  refresh + 1)
             }
 
         } catch (error) {

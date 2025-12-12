@@ -12,7 +12,7 @@ const UserProfile = ({user}) => {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(false)
     const [renderCreatePost, setRenderCreatePost] = useState(false)
-    const [refresh, setRefresh] = useState(false)
+    const [refresh, setRefresh] = useState(null)
 
 
     async function fetchPostsAPi() {
