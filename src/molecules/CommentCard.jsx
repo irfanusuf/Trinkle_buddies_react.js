@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { axiosInstance } from '../utils/axiosinstance'
-import { FaUser, FaReply, FaFlag, FaEdit, FaTrash } from 'react-icons/fa'
+import { FaUser, FaReply, FaFlag, FaEdit, FaTrash, FaClosedCaptioning } from 'react-icons/fa'
 import '../styles/CommentCard.css'
+import { IoMdClose } from 'react-icons/io'
+import ReplyComment from '../atoms/ReplyComment'
 
-const CommentCard = ({ comments, postId, setRefresh }) => {
+const CommentCard = ({ comments, postId, setRefresh, setShowComments }) => {
     const [text, setCommentText] = useState("")
-    const [replyText, setReplyText] = useState("")
+    const [showReplyForm, setShowReplyForm] = useState(false)
+
     const [activeReplyId, setActiveReplyId] = useState(null)
     const [editingCommentId, setEditingCommentId] = useState(null)
     const [editText, setEditText] = useState("")
@@ -28,41 +31,13 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
         }
     }
 
-    async function replyApi(commentId) {
-        if (!replyText.trim()) return
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.post(`/post/comment/${commentId}/reply?token=${token}`, {
-                text: replyText
-            })
 
-            if (res.data.success) {
-                // Add reply to state
-                setReplies(prev => ({
-                    ...prev,
-                    [commentId]: [...(prev[commentId] || []), {
-                        id: Date.now(), // Temporary ID
-                        text: replyText,
-                        userId: {
-                            username: "You", // You would get this from response
-                            profilePic: null
-                        },
-                        createdAt: new Date().toISOString()
-                    }]
-                }))
-                setReplyText("")
-                setActiveReplyId(null)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     async function reportComment(commentId) {
         try {
             const token = localStorage.getItem("token")
             const res = await axiosInstance.post(`/post/comment/${commentId}/report?token=${token}`)
-            
+
             if (res.data.success) {
                 alert("Comment reported successfully")
             }
@@ -89,9 +64,10 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
         }
     }
 
+
     async function deleteComment(commentId) {
         if (!window.confirm("Are you sure you want to delete this comment?")) return
-        
+
         try {
             const token = localStorage.getItem("token")
             const res = await axiosInstance.delete(`/post/comment/${commentId}?token=${token}`)
@@ -121,7 +97,7 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
     return (
         <div className='comments_main'>
             <h3>
-                Comments <span>{comments && comments.length}</span>
+                Comments <span>{comments && comments.length}</span>    <IoMdClose onClick={() => { setShowComments(false) }} />
             </h3>
 
             <div className="comments_list">
@@ -129,11 +105,13 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                     <div key={comment._id} className="comment_item">
                         <div className="comment_header">
                             <div className="avatar">
-                                {comment.userId.profilePic 
+                                {comment.userId.profilePic
                                     ? <img src={comment.userId.profilePic} alt={comment.userId.username} />
                                     : <FaUser fontSize={24} color='grey' />
                                 }
                             </div>
+
+
                             <div className="user_info">
                                 <p className="username">
                                     {comment.userId.username}
@@ -143,6 +121,8 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                                     {formatDate(comment.createdAt || comment.createdDate)}
                                 </span>
                             </div>
+
+
                         </div>
 
                         <div className="comment_content">
@@ -155,13 +135,13 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                                         className="reply_input"
                                         autoFocus
                                     />
-                                    <button 
+                                    <button
                                         onClick={() => editComment(comment._id)}
                                         className="reply_btn_small"
                                     >
                                         Save
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => setEditingCommentId(null)}
                                         className="action_btn"
                                     >
@@ -173,7 +153,27 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                             )}
                         </div>
 
-                        <div className="comment_actions">
+
+                        <div>
+                            <FaReply onClick={() => { setShowReplyForm(true) }} />
+
+                            {showReplyForm &&
+                                <ReplyComment
+                                    comment={comment}
+                                    setShowReplyForm={setShowReplyForm}
+                                    postId={postId}
+                                    setRefresh={setRefresh}
+                                />}
+                        </div>
+
+
+
+
+
+
+
+
+                        {/* <div className="comment_actions">
                             <button 
                                 className="action_btn reply_btn"
                                 onClick={() => setActiveReplyId(
@@ -207,9 +207,9 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                             >
                                 <FaTrash /> Delete
                             </button>
-                        </div>
+                        </div> */}
 
-                        {activeReplyId === comment._id && (
+                        {/* {activeReplyId === comment._id && (
                             <div className="reply_section">
                                 <div className="reply_form">
                                     <input
@@ -234,10 +234,10 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                                     </button>
                                 </div>
                             </div>
-                        )}
+                        )} */}
 
                         {/* Replies Display */}
-                        {(replies[comment._id] || []).length > 0 && (
+                        {/* {(replies[comment._id] || []).length > 0 && (
                             <div className="replies_list">
                                 <h4 style={{ fontSize: '0.9rem', color: '#7f8c8d', marginBottom: '10px' }}>
                                     Replies ({replies[comment._id].length})
@@ -260,27 +260,27 @@ const CommentCard = ({ comments, postId, setRefresh }) => {
                                     </div>
                                 ))}
                             </div>
-                        )}
+                        )} */}
                     </div>
                 ))}
             </div>
 
             <form className="main_form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form_group">
-                    <input 
+                    <input
                         type="text"
                         placeholder="Add a comment..."
                         value={text}
                         onChange={(e) => setCommentText(e.target.value)}
                         className="main_input"
                     />
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={commentApi}
                         className="main_btn"
                         disabled={!text.trim()}
                     >
-                        Post
+                        Comment
                     </button>
                 </div>
             </form>

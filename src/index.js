@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import "./styles/global.css"
-import App from './App';
 import { BrowserRouter } from 'react-router-dom';
+import Store from './context/Store';
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
     // function based component
     <BrowserRouter>
-        <App />
+        <Store/>
     </BrowserRouter>
 )
 

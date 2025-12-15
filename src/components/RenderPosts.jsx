@@ -1,12 +1,12 @@
 
-import { toast } from "react-toastify";
-import { axiosInstance } from "../utils/axiosinstance";
 import "../styles/renderPost.css"
+import Spinner from "../components/Spinner" 
 import { FaHeart, FaRegComment, FaShareSquare } from "react-icons/fa";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CommentCard from "../molecules/CommentCard";
+import { Context } from "../context/Store";
 
-const RenderPosts = (props) => {
+const RenderPosts = () => {
 
 
 
@@ -24,48 +24,28 @@ const RenderPosts = (props) => {
     }
 
 
-
-    async function likeApi(postId) {
-        try {
-
-            console.log("heart button clicked", postId)
-            const token = localStorage.getItem("token")
-
-            const res = await axiosInstance.post(`/post/like/${postId}?token=${token}`)
-            if (res.data.success) {
-                toast.success("liked succesfully")
-                props.setRefresh(refresh =>  refresh + 1)
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
+    const { loading, refresh, userPosts, likeApi, shareApi, fetchPostsAPi } = useContext(Context)
 
 
-    async function commentApi(params) {
-
-    }
-
-    async function shareApi(params) {
-
-    }
-
+    useEffect(() => {
+        fetchPostsAPi()
+    }, [refresh])
 
 
     return (
-        <div className='render_posts'>
+        <>
+            {loading ? <Spinner /> :
+                <div className='render_posts'>
 
-            <h2> Recent Posts</h2>
+                    <h2> Recent Posts</h2>
 
 
-            <div className='posts' >
+                    <div className='posts' >
 
-                {props.posts.map((post) => (
-                    <div className="post">
+                        {userPosts && userPosts.map((post) => (
+                            <div className="post">
 
-                        {/* <div className="header">
+                                {/* <div className="header">
                             <div className="avatar">{props.username.slice(0, 2).toUpperCase()}</div>
                             <div className="header-info">
                                 <h4>{props.username.toUpperCase()}</h4>
@@ -75,73 +55,79 @@ const RenderPosts = (props) => {
 
 
 
-                        {post.postPicUrl ? (
-                            <img className="image" src={post.postPicUrl} alt="post" />
-                        ) : (
-                            <div className="no-image">{post.postCaption}</div>
-                        )}
+                                {post.postPicUrl ? (
+                                    <img className="image" src={post.postPicUrl} alt="post" />
+                                ) : (
+                                    <div className="no-image">{post.postCaption}</div>
+                                )}
 
 
 
-                        <div className="actions">
+                                <div className="actions">
 
-                            <button onClick={() => { likeApi(post._id) }} className="action-btn">
+                                    <button onClick={() => { likeApi(post._id) }} className="action-btn">
 
-                                <FaHeart
+                                        <FaHeart
 
-                                    style={post.likes.findIndex(l => l.userId === post.userId) > -1 ?
-                                        { color: "red" } : { color: "green" }}
+                                            style={post.likes.findIndex(l => l.userId === post.userId) > -1 ?
+                                                { color: "red" } : { color: "green" }}
 
-                                />
+                                        />
 
-                            </button>
-
-
-
-                            <button onClick={() => { handleCommentCard(post._id, post.comments) }} className="action-btn"><FaRegComment /></button>
-
-
-                            <button onClick={shareApi} className="action-btn"><FaShareSquare /></button>
-
-                        </div>
+                                    </button>
 
 
 
-                        <div className="likes-count">{post.likes && post.likes.length} likes</div>
+                                    <button onClick={() => { handleCommentCard(post._id, post.comments) }} className="action-btn"><FaRegComment /></button>
+
+
+                                    <button onClick={shareApi} className="action-btn"><FaShareSquare /></button>
+
+                                </div>
 
 
 
-                        {post.postCaption && (
-                            <div className="caption">
-                                <span className="username">{props.username} </span>
-                                {post.postCaption}
+                                <div className="likes-count">{post.likes && post.likes.length} likes</div>
+
+
+
+                                {post.postCaption && (
+                                    <div className="caption">
+                                        <span className="username">{post.userId.username} </span>
+                                        {post.postCaption}
+                                    </div>
+                                )}
+
+
+
+                                <div className="comments-summary">
+                                    View all {post.comments && post.comments.length} comments
+                                </div>
+
+
+
                             </div>
-                        )}
-
-
-
-                        <div className="comments-summary">
-                            View all {post.comments && post.comments.length} comments
-                        </div>
-
-
+                        ))}
 
                     </div>
-                ))}
-
-            </div>
 
 
 
-            {showComments &&
-                <div className="comments">
-                    <CommentCard comments={comments} postId={postId} setRefresh={props.setRefresh} />
-                </div>
-            }
+                    {showComments &&
+
+                        <CommentCard
+                            comments={comments}
+                            postId={postId}
+                            setShowComments={setShowComments} />
+
+                    }
 
 
 
-        </div>
+                </div>}
+
+        </>
+
     )
 }
 

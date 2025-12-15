@@ -125,18 +125,4 @@ gap: 5x;
 
 
 
-.comments {
-  position: fixed;
-  right: 10px; /* Changed from left: 0 to right: 20px */
-  bottom: 80px; /* Adjust this based on your header/navbar height */
-  width: 300px;
-  min-height: 300px;
-  max-height: calc(100vh - 100px); /* Limit height based on viewport */
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.174);
-  border-radius: 8px;
-  padding: 30px;
-  background-color: white; /* Added background for better visibility */
-  z-index: 100; /* Ensure it stays above other content */
-  overflow-y: auto; /* Add scroll if content overflows */
-}
 

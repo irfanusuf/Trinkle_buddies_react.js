@@ -1,45 +1,19 @@
 
-import { useEffect, useState } from 'react'
-import { axiosInstance } from '../utils/axiosinstance'
+import { useContext,  useState } from 'react'
 import CreatePost from '../components/CreatePost'
 import RenderPosts from '../components/RenderPosts'
-import Spinner from '../components/Spinner'
 import "../styles/userProfile.css"
+import { Context } from '../context/Store'
 
 
-const UserProfile = ({user}) => {
+const UserProfile = () => {
 
-    const [posts, setPosts] = useState([])
-    const [loading, setLoading] = useState(false)
     const [renderCreatePost, setRenderCreatePost] = useState(false)
-    const [refresh, setRefresh] = useState(null)
-
-
-    async function fetchPostsAPi() {
-        try {
-            setLoading(true)
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.get(`/fetch/posts?token=${token}`)
-            if (res.data.success) {
-                setPosts(res.data.payload)
-                setLoading(false)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        fetchPostsAPi()    // whenever the userprofile  renders  ,,, when value of refresh changes 
-    }, [refresh])
-
-
+  
+   const {user} = useContext(Context)
 
     return (
-
-
         <>
-
             <div className='user_profile'>
 
                 <div className='user_profile_header'>
@@ -61,24 +35,10 @@ const UserProfile = ({user}) => {
 
             </div>
 
-
-                {renderCreatePost ?
-
-                    <CreatePost
-                        setRenderCreatePost={setRenderCreatePost}
-                        setRefresh={setRefresh}
-                    /> : ""}
-
-                {/*component*/}
-
-                {loading ? <Spinner /> : <RenderPosts
-                    posts={posts}
-                    username={user.username}
-                    setRefresh={setRefresh} />}
-
-    
+            {renderCreatePost &&  <CreatePost setRenderCreatePost={setRenderCreatePost}/> }
 
 
+             <RenderPosts />
         </>
 
     )

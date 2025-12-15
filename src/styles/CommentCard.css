@@ -1,10 +1,14 @@
 /* CommentCard.css */
 
+
+
+
+
 .comments_main {
   position: fixed;
-  right: 20px;
+  right: 22px;
   top: 100px;
-  width: 450px;
+  width: 310px;
   max-height: calc(100vh - 150px);
   background-color: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -37,7 +41,7 @@
 /* Comment Item */
 .comment_item {
   background-color: #f9f9f9;
-  padding: 15px;
+  padding: 5px;
   margin-bottom: 15px;
   border-radius: 10px;
   border-left: 4px solid #3498db;
@@ -269,7 +273,7 @@
 }
 
 .main_btn {
-  padding: 12px 25px;
+  padding: 8px 10px;
   background-color: #3498db;
   color: white;
   border: none;

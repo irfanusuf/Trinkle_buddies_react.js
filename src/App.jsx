@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import {  Route, Routes, useNavigate } from 'react-router-dom'
+
+import {  Route, Routes} from 'react-router-dom'
 import Home from "./pages/Home"
 import Services from "./pages/Services"
 import Login from "./pages/Login"
@@ -9,42 +9,13 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ToastContainer } from 'react-toastify'
 import UserProfile from './pages/UserProfile'
-import { axiosInstance } from './utils/axiosinstance'
+import Explore from './pages/Explore'
 
 
 const App = () => {
 
-  const [user, setUser] = useState({})
 
-
-  const navigate = useNavigate()
-
-  async function fetchUserApi() {
-
-    try {
-      const token = localStorage.getItem("token")
-      if (token !== null) {
-        const response = await axiosInstance.get(`/user/verify?token=${token}`)   // API CALL
-        if (response.status === 200) {
-
-          setUser(response.data.payload)
-        }
-
-      } else {
-        navigate("/login")
-      }
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-
-  useEffect(() => {
-    fetchUserApi()      // whenveer App renders
-  }, [])
-
-
+ 
   return (
 
     // jsx fragmentation 
@@ -58,7 +29,8 @@ const App = () => {
           <Route path='/contact' element={<Contact />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/user/profile' element={<UserProfile user={user} />} />
+          <Route path='/user/profile' element={<UserProfile />} />
+          <Route path='/explore' element ={<Explore />}/>
         </Routes>
       </div>
       <Footer />
