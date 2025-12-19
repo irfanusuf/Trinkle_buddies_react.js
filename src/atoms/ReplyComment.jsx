@@ -1,42 +1,33 @@
-import React, { useState } from 'react'
-import { axiosInstance } from '../utils/axiosinstance'
+import  { useContext, useState } from 'react'
+
 import { IoMdClose } from 'react-icons/io'
+import { Context } from '../context/Store'
 
-const ReplyComment = ({comment , setShowReplyForm , postId , setRefresh}) => {
+const ReplyComment = ({ comment, setShowReplyForm, postId }) => {
 
 
-  const [replyText, setReplyText] = useState("")
+    const [replyText, setReplyText] = useState("")
 
-   async function replyApi(commentId) {
-        if (!replyText.trim()) return
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.post(`/post/comment/${postId}/reply/${commentId}?token=${token}`, {
-                text: replyText
-            })
 
-            if (res.data.success) {
-                // Add reply to state
-             
-                setReplyText("")
-                setRefresh(refresh => refresh + 1)
-                // setActiveReplyId(null)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const { replyApi } = useContext(Context)
 
 
 
     return (
-        <div>
+        <div> 
             <form>
                 <input
                     placeholder="reply to {@mehran}"
                     value={replyText}
                     onChange={(e) => { setReplyText(e.target.value) }} />
-                <button type='button' onClick={() => { replyApi(comment._id) }}> Reply </button>
+                <button type='button' onClick={async () => {
+
+                    const apiResult = await replyApi(replyText , postId ,  comment._id)
+                    if (apiResult) {
+                        setReplyText("")
+                    }
+
+                }}> Reply </button>
             </form>
 
             <IoMdClose onClick={() => { setShowReplyForm(false) }} />

@@ -1,84 +1,27 @@
-import { useState } from 'react'
-import { axiosInstance } from '../utils/axiosinstance'
+import { useContext, useState } from 'react'
 import { FaUser, FaReply, FaFlag, FaEdit, FaTrash, FaClosedCaptioning } from 'react-icons/fa'
 import '../styles/CommentCard.css'
 import { IoMdClose } from 'react-icons/io'
 import ReplyComment from '../atoms/ReplyComment'
+import { Context } from '../context/Store'
 
-const CommentCard = ({ comments, postId, setRefresh, setShowComments }) => {
+const CommentCard = ({comments,  postId, setShowComments }) => {
     const [text, setCommentText] = useState("")
     const [showReplyForm, setShowReplyForm] = useState(false)
 
+
+
+    
     const [activeReplyId, setActiveReplyId] = useState(null)
     const [editingCommentId, setEditingCommentId] = useState(null)
     const [editText, setEditText] = useState("")
     const [replies, setReplies] = useState({}) // Store replies for each comment
-
-    const formData = { text }
-
-    async function commentApi() {
-        if (!text.trim()) return
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.post(`/post/comment/${postId}?token=${token}`, formData)
-
-            if (res.data.success) {
-                setRefresh(refresh => refresh + 1)
-                setCommentText("")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const {editComment , commentApi} = useContext(Context)
 
 
+    const {loading } = useContext(Context)
 
-    async function reportComment(commentId) {
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.post(`/post/comment/${commentId}/report?token=${token}`)
-
-            if (res.data.success) {
-                alert("Comment reported successfully")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    async function editComment(commentId) {
-        if (!editText.trim()) return
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.put(`/post/comment/${commentId}?token=${token}`, {
-                text: editText
-            })
-
-            if (res.data.success) {
-                setRefresh(refresh => refresh + 1)
-                setEditingCommentId(null)
-                setEditText("")
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-
-    async function deleteComment(commentId) {
-        if (!window.confirm("Are you sure you want to delete this comment?")) return
-
-        try {
-            const token = localStorage.getItem("token")
-            const res = await axiosInstance.delete(`/post/comment/${commentId}?token=${token}`)
-
-            if (res.data.success) {
-                setRefresh(refresh => refresh + 1)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
 
     function formatDate(dateString) {
         const date = new Date(dateString)
@@ -101,7 +44,8 @@ const CommentCard = ({ comments, postId, setRefresh, setShowComments }) => {
             </h3>
 
             <div className="comments_list">
-                {comments && comments.map((comment) => (
+
+                {!loading && comments && comments.map((comment) => (
                     <div key={comment._id} className="comment_item">
                         <div className="comment_header">
                             <div className="avatar">
@@ -162,7 +106,6 @@ const CommentCard = ({ comments, postId, setRefresh, setShowComments }) => {
                                     comment={comment}
                                     setShowReplyForm={setShowReplyForm}
                                     postId={postId}
-                                    setRefresh={setRefresh}
                                 />}
                         </div>
 
@@ -276,7 +219,14 @@ const CommentCard = ({ comments, postId, setRefresh, setShowComments }) => {
                     />
                     <button
                         type="button"
-                        onClick={commentApi}
+                        onClick={async()=>{
+                          const apiResult = await  commentApi(text , postId)
+                          if(apiResult){
+                            // form santization     
+                            setCommentText("")
+                          }
+                        
+                        }}
                         className="main_btn"
                         disabled={!text.trim()}
                     >

@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import { ToastContainer } from 'react-toastify'
 import UserProfile from './pages/UserProfile'
 import Explore from './pages/Explore'
+import IsAuth from './hooks/IsAuth'
 
 
 const App = () => {
@@ -29,10 +30,11 @@ const App = () => {
           <Route path='/contact' element={<Contact />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/user/profile' element={<UserProfile />} />
-          <Route path='/explore' element ={<Explore />}/>
+          <Route path='/user/profile' element={   <IsAuth> <UserProfile />   </IsAuth>       } />
+          <Route path='/explore' element ={   <IsAuth>   <Explore />  </IsAuth> }/>
         </Routes>
       </div>
+      
       <Footer />
 
 

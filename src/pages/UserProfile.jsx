@@ -1,21 +1,30 @@
 
-import { useContext,  useState } from 'react'
+import { useContext,  useEffect,  useState } from 'react'
 import CreatePost from '../components/CreatePost'
 import RenderPosts from '../components/RenderPosts'
 import "../styles/userProfile.css"
 import { Context } from '../context/Store'
+import Spinner from '../components/Spinner'
 
 
 const UserProfile = () => {
 
     const [renderCreatePost, setRenderCreatePost] = useState(false)
   
-   const {user} = useContext(Context)
+   const {loading , user  , fetchUserPosts , fetchUserDetails ,  userPosts} = useContext(Context)
+
+   useEffect(()=>{
+    fetchUserDetails()
+    fetchUserPosts()
+   }, [  fetchUserPosts])
+
+
 
     return (
         <>
-            <div className='user_profile'>
-
+          {loading ? <Spinner/>  : 
+          <div className='user_profile'>
+            
                 <div className='user_profile_header'>
                     <div>
                         <h3>   {user.username} </h3>
@@ -33,12 +42,13 @@ const UserProfile = () => {
 
                 <button onClick={() => { setRenderCreatePost(!renderCreatePost) }} > create Post </button>
 
-            </div>
+        </div>}
+
+
 
             {renderCreatePost &&  <CreatePost setRenderCreatePost={setRenderCreatePost}/> }
 
-
-             <RenderPosts />
+             <RenderPosts posts={userPosts} />
         </>
 
     )

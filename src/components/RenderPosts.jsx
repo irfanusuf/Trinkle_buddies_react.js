@@ -1,12 +1,12 @@
 
 import "../styles/renderPost.css"
-import Spinner from "../components/Spinner" 
+import Spinner from "../components/Spinner"
 import { FaHeart, FaRegComment, FaShareSquare } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import CommentCard from "../molecules/CommentCard";
 import { Context } from "../context/Store";
 
-const RenderPosts = () => {
+const RenderPosts = ({posts}) => {
 
 
 
@@ -16,22 +16,15 @@ const RenderPosts = () => {
 
 
     const handleCommentCard = (postId, postCommentsARR) => {
-        //  console.log("postid" , postId)
-        //  console.log("commentARR" , postCommentsARR)
+
         setShowComments(true)
         setComments(postCommentsARR)
         setPostId(postId)
     }
 
+    const { loading, likeApi, shareApi,  } = useContext(Context)
 
-    const { loading, refresh, userPosts, likeApi, shareApi, fetchPostsAPi } = useContext(Context)
-
-
-    useEffect(() => {
-        fetchPostsAPi()
-    }, [refresh])
-
-
+ 
     return (
         <>
             {loading ? <Spinner /> :
@@ -42,7 +35,7 @@ const RenderPosts = () => {
 
                     <div className='posts' >
 
-                        {userPosts && userPosts.map((post) => (
+                        {posts && posts.map((post) => (
                             <div className="post">
 
                                 {/* <div className="header">
@@ -64,25 +57,13 @@ const RenderPosts = () => {
 
 
                                 <div className="actions">
-
                                     <button onClick={() => { likeApi(post._id) }} className="action-btn">
-
-                                        <FaHeart
-
-                                            style={post.likes.findIndex(l => l.userId === post.userId) > -1 ?
-                                                { color: "red" } : { color: "green" }}
-
-                                        />
-
+                                        <FaHeart style={post.likes.findIndex(l => l.userId === post.userId) > -1 ?
+                                            { color: "red" } : { color: "green" }} />
                                     </button>
 
-
-
                                     <button onClick={() => { handleCommentCard(post._id, post.comments) }} className="action-btn"><FaRegComment /></button>
-
-
                                     <button onClick={shareApi} className="action-btn"><FaShareSquare /></button>
-
                                 </div>
 
 
@@ -98,13 +79,9 @@ const RenderPosts = () => {
                                     </div>
                                 )}
 
-
-
                                 <div className="comments-summary">
                                     View all {post.comments && post.comments.length} comments
                                 </div>
-
-
 
                             </div>
                         ))}
@@ -112,19 +89,16 @@ const RenderPosts = () => {
                     </div>
 
 
-
-                    {showComments &&
-
-                        <CommentCard
-                            comments={comments}
-                            postId={postId}
-                            setShowComments={setShowComments} />
-
-                    }
-
-
-
                 </div>}
+
+
+            {showComments &&
+
+                <CommentCard
+                    comments={comments}
+                    postId={postId}
+                    setShowComments={setShowComments} />
+            }
 
         </>
 

@@ -7,11 +7,11 @@ const Spinner = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            minHeight: "80vh"
+            minHeight: "20vh"
         }}>
         
         
-        <img src={spinner}/>
+          <img src={spinner}/>
         
         </div>
     )

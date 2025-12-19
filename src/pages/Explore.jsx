@@ -1,8 +1,32 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import RenderPosts from '../components/RenderPosts'
+import { Context } from '../context/Store'
 
 const Explore = () => {
+
+
+
+  const { fetchExplorePosts , explorePosts} = useContext(Context)
+
+
+  useEffect(() => {
+
+    fetchExplorePosts()
+
+
+  }, [fetchExplorePosts])
+
+
   return (
-    <div>Explore</div>
+    <div>
+
+
+      <RenderPosts posts = {explorePosts} />
+
+
+
+
+    </div>
   )
 }
 
