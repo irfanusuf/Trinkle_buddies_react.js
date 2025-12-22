@@ -125,4 +125,27 @@ gap: 5x;
 
 
 
+.setting_dropDown{
+
+/* border: 1px solid black ; */
+
+width: 100px;
+box-shadow:  2px 2px 10px 10px rgba(0, 0, 0, 0.089);
+border-radius: 5px;
+
+>ul{
+  padding: 0px;
+
+  >li{
+    list-style-type: none;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    &:hover{
+      background-color: aqua;
+      cursor: pointer;
+    }
+  }
+}
+
+}
 

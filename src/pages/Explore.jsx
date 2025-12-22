@@ -10,21 +10,16 @@ const Explore = () => {
 
 
   useEffect(() => {
-
     fetchExplorePosts()
-
-
   }, [fetchExplorePosts])
 
 
   return (
     <div>
 
+      <h2> Explore What's trending </h2>
 
       <RenderPosts posts = {explorePosts} />
-
-
-
 
     </div>
   )

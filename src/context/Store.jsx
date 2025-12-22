@@ -151,7 +151,6 @@ const Store = () => {
         }
     }
 
-
     async function replyApi(replyText, postId, commentId) {
         if (!replyText.trim()) return
         try {
@@ -219,9 +218,6 @@ const Store = () => {
             console.log(error)
         }
     }
-
-
-
 
 
     return (

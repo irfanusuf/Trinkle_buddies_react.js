@@ -5,14 +5,20 @@ import { FaHeart, FaRegComment, FaShareSquare } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import CommentCard from "../molecules/CommentCard";
 import { Context } from "../context/Store";
+import { BsThreeDots } from "react-icons/bs";
+import { IoMdClose } from 'react-icons/io'
 
-const RenderPosts = ({posts}) => {
+const RenderPosts = ({ posts }) => {
 
 
 
     const [showComments, setShowComments] = useState(false)
     const [postId, setPostId] = useState(null)
     const [comments, setComments] = useState([])
+
+
+    const [showSettings, setShowSettings] = useState(false)
+    const [settingPostId, setSettingPostId] = useState(null)
 
 
     const handleCommentCard = (postId, postCommentsARR) => {
@@ -22,15 +28,19 @@ const RenderPosts = ({posts}) => {
         setPostId(postId)
     }
 
-    const { loading, likeApi, shareApi,  } = useContext(Context)
+    const { loading, likeApi, shareApi, user  ,updatepost , deletePost , reportPost} = useContext(Context)
 
- 
+
+    function handleCopyLink (){
+
+
+    }
+
+
     return (
         <>
             {loading ? <Spinner /> :
                 <div className='render_posts'>
-
-                    <h2> Recent Posts</h2>
 
 
                     <div className='posts' >
@@ -57,6 +67,8 @@ const RenderPosts = ({posts}) => {
 
 
                                 <div className="actions">
+
+
                                     <button onClick={() => { likeApi(post._id) }} className="action-btn">
                                         <FaHeart style={post.likes.findIndex(l => l.userId === post.userId) > -1 ?
                                             { color: "red" } : { color: "green" }} />
@@ -64,6 +76,38 @@ const RenderPosts = ({posts}) => {
 
                                     <button onClick={() => { handleCommentCard(post._id, post.comments) }} className="action-btn"><FaRegComment /></button>
                                     <button onClick={shareApi} className="action-btn"><FaShareSquare /></button>
+
+
+                                    <BsThreeDots onClick={() => {
+
+                                        setShowSettings(true)    // visibiltyu on 
+                                        setSettingPostId(post._id)     // 
+
+
+                                    }} />
+
+                                    {showSettings && post._id === settingPostId &&
+
+                                        <div className="setting_dropDown">
+
+                                            <IoMdClose onClick={()=>{
+                                                setShowSettings(false)
+                                            }}/>
+
+                                            <ul>
+                                                {post.userId !== user.userId && <li onClick={updatepost}> Update</li>}
+                                                {post.userId !== user.userId && <li onClick={deletePost}> Delete </li>}
+                                                <li onClick={handleCopyLink}> Copy Link</li>
+                                                {post.userId === user.userId && <li onClick={reportPost} > Report</li>}
+
+                                            </ul>
+
+                                        </div>
+
+
+                                    }
+
+
                                 </div>
 
 
